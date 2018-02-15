@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr" class="uk-height-1-1">
+
+<head>
+  <title>Title</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/css/uikit.min.css" />
+  <link rel="stylesheet" href="assets/css/style.dev.css" />
+  <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+  <script src="assets/js/uikit.min.js"></script>
+  <script src="assets/js/uikit-icons.min.js"></script>
+</head>
+
+<body id="dashboard">
+  <nav class="uk-navbar uk-navbar-container uk-margin">
+    <div class="uk-navbar-left">
+      <a href="#" class="uk-navbar-toggle" uk-toggle="target: #offcanvas-nav">
+        <span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span>
+      </a>
+    </div>
+    <div class="uk-navbar-center">
+      <a class="uk-navbar-item uk-logo" href="#">LOGO ICI !</a>
+    </div>
+    <div class="uk-navbar-right uk-visible@m">
+      <ul class="uk-navbar-nav">
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: sign-out"></span> Déconnexion</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="offcanvas-nav" uk-offcanvas="overlay: true">
+    <div class="uk-offcanvas-bar">
+      <ul class="uk-nav uk-nav-default">
+        <li class="uk-nav-header">Accueil</li>
+        <li class="uk-active"><a href="#"><span class="uk-margin-small-right" uk-icon="icon: tv"></span> Tableau de bord</a></li>
+
+        <li class="uk-nav-header">Suivi détaillé</li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Consommation</a></li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: lifesaver"></span> Économies</a></li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: future"></span> Prévisions</a></li>
+
+        <li class="uk-nav-header">Mon compte</li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Mes informations</a></li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: settings"></span> Paramètres</a></li>
+
+        <li><br></li>
+        <li class="uk-nav-divider"><a href="#"><span class="uk-margin-small-right" uk-icon="icon: sign-out"></span> Déconnexion</a></li>
+      </ul>
+      <p class="uk-text-meta uk-position-bottom uk-text-center">Arro'Smart | Tous droits réservés | © 2018</p>
+    </div>
+  </div>
+
+
+  <div class="uk-container uk-container-expand">
+    <ul class="uk-breadcrumb">
+      <li class="uk-disabled"><a>Accueil</a></li>
+      <li><span>Tableau de bord</span></li>
+    </ul>
+    <div id="content" class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-card-title">Tableau de bord</h1>
+      <span></span>
+      <hr class="uk-margin-medium-bottom">
+      <div class="uk-alert-danger" uk-alert>
+        <p><b><span class="uk-margin-small-right" uk-icon="icon: ban"></span>Ooops !</b> Il semblerait y avoir un problème avec un de vos capteurs, veuillez prendre contact avec le service technique si ce message persiste.</p>
+      </div>
+      <div class="uk-alert-warning" uk-alert>
+        <p><b><span class="uk-margin-small-right" uk-icon="icon: warning"></span>Attention !</b> Des restrictions d'eau actuellements en cours dans votre département, l'arrosage y est <u>interdit</u>. De ce fait, l'arrosage est désactivé jusqu'à la fin de ces dernières.</p>
+      </div>
+      <div class="uk-grid-medium uk-child-width-expand@s uk-text-center" uk-grid>
+        <div class="widget">
+          <div class="uk-card uk-background-orange uk-card-body">
+            <i class="fa fa-thermometer-half"></i>&nbsp;&nbsp;&nbsp;18&#8239;°C
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Actuellement</span>
+            </div>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="uk-card uk-background-blue uk-card-body">
+            <i class="fa fa-tint"></i>&nbsp;&nbsp;&nbsp;2&#8239;mm
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Aujourd'hui</span>
+            </div>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="uk-card uk-background-yellow uk-card-body">
+            <i class="fa fa-sun-o"></i>&nbsp;&nbsp;&nbsp;30&#8239;W/m<sup>2</sup>
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Actuellement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
