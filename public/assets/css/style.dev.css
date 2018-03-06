@@ -1,0 +1,84 @@
+html, body {
+  height: 100%;
+}
+
+.uk-background-green {
+  color: rgba(255, 255, 255, .8);
+  background-color: #27ae60;
+}
+.uk-background-blue {
+  color: rgba(255, 255, 255, .8);
+  background-color: #2980b9;
+}
+.uk-background-orange {
+  color: rgba(255, 255, 255, .8);
+  background-color: #d35400;
+}
+.uk-background-red {
+  color: rgba(255, 255, 255, .8);
+  background-color: #c0392b;
+}
+.uk-background-yellow {
+  color: rgba(255, 255, 255, 1);
+  background-color: #f1c40f;
+}
+
+/****************/
+/***** AUTH *****/
+/****************/
+#auth-page {
+  background: url("https://images.unsplash.com/31/RpgvvtYAQeqAIs1knERU_vegetables.jpg?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max") no-repeat center;
+  background-size: cover;
+}
+
+#particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#auth {
+  padding: 35px 50px;
+  max-width: 90%;
+}
+
+#auth form .uk-inline {
+  width: 100%;
+}
+
+#login form {
+  width: 100%;
+}
+
+
+/*****************/
+/***** ADMIN *****/
+/*****************/
+#dashboard {
+  background-image: url('../img/admin_background1.png');
+}
+
+#dashboard .uk-navbar-container:not(.uk-navbar-transparent) {
+  background: rgba(255, 255, 255, .8);
+}
+
+#dashboard .widget {
+  font-size: 1.6em;
+}
+
+#dashboard .widget .uk-card {
+  padding: 25px 30px 50px;
+}
+
+#dashboard .widget .info {
+  height: 25px;
+  background-color: rgba(0, 0, 0, .1);
+  color: rgba(255, 255, 255, .5);
+}
+
+#dashboard .widget .info span {
+  vertical-align: text-top;
+}
+
+/* PERSONNAL INFORMATIONS */
+input[name="department"]:valid { text-transform: uppercase; }

@@ -2,3 +2,6 @@ application/logs/*
 !application/logs/index.html
 
 .idea/*
+vendor
+composer.lock
+test.php

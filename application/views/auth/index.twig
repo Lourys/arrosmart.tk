@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr" class="uk-height-1-1">
+
+<head>
+  <title>Title</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ css('uikit.min') }}"/>
+  <link rel="stylesheet" href="{{ css('style.dev') }}"/>
+</head>
+
+<body class="uk-height-1-1" id="auth-page">
+<div id="particles"></div>
+<div class="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
+  <div id="auth"
+       class="uk-card uk-card-default uk-card-hover uk-card-body uk-width-1-4@xl uk-width-1-3@m uk-width-3-5@s"
+       uk-scrollspy="cls:uk-animation-fade">
+    <form id="login" class="uk-form-stacked" action="#" method="post">
+      <h3 class="uk-heading-divider uk-text-primary uk-text-uppercase">
+        Connexion
+      </h3>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="email">
+          Email :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <input class="uk-input" id="email" name="email" type="email" placeholder="vous@exemple.fr"
+                   autofocus="autofocus">
+          </div>
+        </div>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="password">
+          Mot de passe :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input class="uk-input" id="password" name="password" type="password" placeholder="••••••••••••">
+          </div>
+        </div>
+      </div>
+      <button class="uk-button uk-button-primary uk-width-1-1">Connexion</button>
+      <hr>
+      <div class="uk-text-center">
+        <a href="#" uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
+           class="uk-button uk-button-text">Vous ne
+          possédez pas de compte ?</a>
+      </div>
+    </form>
+    <form id="register" class="uk-form-stacked" action="#" method="post" hidden>
+      <h3 class="uk-heading-divider uk-text-primary uk-text-uppercase">
+        Inscription
+      </h3>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="serial">
+          Numéro de série :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: tag"></span>
+            <input class="uk-input" id="serial" type="text" placeholder="WF6R-5R3B-VEWB-5MBY-QWZW"
+                   autofocus="autofocus">
+          </div>
+        </div>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="registerEmail">
+          Email :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: mail"></span>
+            <input class="uk-input" id="registerEmail" type="email" placeholder="vous@exemple.fr">
+          </div>
+        </div>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="registerPassword">
+          Mot de passe :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input class="uk-input" id="registerPassword" type="password" minlength="8" placeholder="••••••••••••">
+          </div>
+          <span class="uk-text-meta">Le mot de passe doit contenir au moins 8 caractères.</span>
+        </div>
+      </div>
+      <div class="uk-margin">
+        <label class="uk-form-label" for="registerPasswordConfirmation">
+          Confirmation du mot de passe :
+        </label>
+        <div class="uk-form-controls">
+          <div class="uk-inline">
+            <span class="uk-form-icon" uk-icon="icon: lock"></span>
+            <input class="uk-input" id="registerPasswordConfirmation" type="password" minlength="8"
+                   placeholder="••••••••••••">
+          </div>
+        </div>
+      </div>
+      <button class="uk-button uk-button-primary uk-width-1-1">Inscription</button>
+      <hr>
+      <div class="uk-text-center">
+        <a href="#" uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
+           class="uk-button uk-button-text">Vous possédez déjà un compte ?</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="{{ js('jquery.min') }}"></script>
+<script src="{{ js('uikit.min') }}" defer></script>
+<script src="{{ js('uikit-icons.min') }}" defer></script>
+<script src="{{ js('particles.min') }}" async></script>
+<script defer>
+  $(document).ready(function () {
+    particlesJS.load('particles', 'assets/particles.json');
+    var request;
+
+    // LOGIN FORM
+    $("#login").submit(function (event) {
+      event.preventDefault();
+      if (request) {
+        request.abort();
+      }
+      var $form = $(this);
+      var $inputs = $form.find("input, select, button, textarea");
+      var serializedData = $form.serialize();
+      var buttonText = $form.find('button').html();
+      $form.find('button').html('<div uk-spinner></div>');
+      $inputs.prop("disabled", true);
+
+      request = $.ajax({
+        url: "http://localhost/api.arrosmart.tk/public/getAccessToken",
+        type: "post",
+        data: serializedData
+      });
+
+
+      request.done(function (response, textStatus, jqXHR) {
+        UIkit.notification("<span uk-icon='icon: check'></span> Vous avez été connecté avec succès, vous serez redirigé dans un instant", {status: 'success'});
+        console.log(response)
+      });
+      request.fail(function (jqXHR, textStatus, errorThrown) {
+        if (errorThrown === 'Unauthorized') {
+          UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect", {status: 'danger'});
+        } else {
+          UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafrachir la page ou réessayer plus tard.", {status: 'danger'});
+        }
+      });
+      request.always(function () {
+        $form.find('button').html(buttonText);
+        $inputs.prop("disabled", false);
+      });
+    });
+  });
+</script>
+</body>
+
+</html>
