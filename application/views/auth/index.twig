@@ -29,7 +29,7 @@
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: mail"></span>
             <input class="uk-input" id="email" name="email" type="email" placeholder="vous@exemple.fr"
-                   autofocus="autofocus">
+                   autofocus="autofocus" required>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="uk-form-controls">
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: lock"></span>
-            <input class="uk-input" id="password" name="password" type="password" placeholder="••••••••••••">
+            <input class="uk-input" id="password" name="password" type="password" placeholder="••••••••••••" required>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@
       $inputs.prop("disabled", true);
 
       request = $.ajax({
-        url: "http://localhost/api.arrosmart.tk/public/getAccessToken",
+        url: "http://localhost:8080/api.arrosmart.tk/public/getAccessToken",
         type: "post",
         data: serializedData
       });
@@ -144,7 +144,13 @@
 
       request.done(function (response, textStatus, jqXHR) {
         UIkit.notification("<span uk-icon='icon: check'></span> Vous avez été connecté avec succès, vous serez redirigé dans un instant", {status: 'success'});
-        console.log(response)
+        window.setTimeout(function(){
+          {% if (this.input.get('redirect') != null) %}
+            window.location.replace("{{ this.input.get('redirect') }}?token=" + response.token);
+          {% else %}
+            window.location.replace("{{ site_url() }}?token=" + response.token);
+          {% endif %}
+        }, 2500);
       });
       request.fail(function (jqXHR, textStatus, errorThrown) {
         if (errorThrown === 'Unauthorized') {
@@ -152,10 +158,10 @@
         } else {
           UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
         }
+        $inputs.prop("disabled", false);
       });
       request.always(function () {
         $form.find('button').html(buttonText);
-        $inputs.prop("disabled", false);
       });
     });
     // REGISTER FORM

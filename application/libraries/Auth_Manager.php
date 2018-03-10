@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Authentication manager
  *
- * @property CMS_Controller CI
+ * @property CI_Controller CI
  */
 class Auth_Manager
 {
@@ -32,7 +32,6 @@ class Auth_Manager
     }
 
 
-
     return null;
   }
 
@@ -50,7 +49,6 @@ class Auth_Manager
     if (empty($email) || empty($password)) {
       return null;
     }
-
 
 
     return null;
@@ -81,18 +79,18 @@ class Auth_Manager
    */
   function isLogged()
   {
-    return !is_null($this->CI->session->userdata('apikey')) ? true : false;
+    return !is_null($this->CI->session->userdata('token')) ? true : false;
   }
 
 
   /**
    * Authenticate user
    *
-   * @return bool
+   * @param string $token
    */
-  function authenticate($api_key)
+  function authenticate($token)
   {
-    $this->CI->session->set_userdata('apikey' => $api_key)
+    $this->CI->session->set_userdata(['token' => $token]);
   }
 
 
@@ -101,6 +99,7 @@ class Auth_Manager
    */
   public function logout()
   {
-    $this->limpid->session->unset_userdata(array_keys($this->limpid->session->userdata()));
+    $this->CI->session->unset_userdata(array_keys($this->CI->session->userdata()));
+    redirect(base_url());
   }
 }

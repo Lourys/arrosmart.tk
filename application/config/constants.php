@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+defined('API_ADDRESS') OR define('API_ADDRESS', 'http://localhost/api.arrosmart.tk/public/');
+
 /*
 |--------------------------------------------------------------------------
 | Display Debug backtrace
