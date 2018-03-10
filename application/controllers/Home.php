@@ -5,6 +5,8 @@ class Home extends MY_Controller {
 
   public function index()
 	{
-		$this->twig->display('welcome_message');
+
+    echo password_hash('210100', PASSWORD_BCRYPT);
 	}
+  
 }

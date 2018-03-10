@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Authentication manager
  *
- * @property CMS_Controller limpid
+ * @property CMS_Controller CI
  */
 class Auth_Manager
 {

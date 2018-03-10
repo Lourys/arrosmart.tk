@@ -19,6 +19,6 @@ class MY_Controller extends CI_Controller {
     $this->twig->getTwig()->addExtension(new Assets_Extension());
     $this->twig->addGlobal('this', $this);
 
-    $this->data = array();
+    $this->data = [];
   }
 }
