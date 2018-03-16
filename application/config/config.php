@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://172.20.80.238/arrosmart.tk/public/';
-$config['base_url'] = 'http://localhost:8080/arrosmart.tk/public/';
+$config['base_url'] = 'http://' . HTTP_HOST . '/arrosmart.tk/public/';
 
 /*
 |--------------------------------------------------------------------------

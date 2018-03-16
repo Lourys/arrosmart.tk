@@ -1,0 +1,50 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+  <div class="uk-container uk-container-expand">
+    <ul class="uk-breadcrumb">
+      <li class="uk-disabled"><a>Accueil</a></li>
+      <li><span>Tableau de bord</span></li>
+    </ul>
+    <div id="content" class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-card-title">Tableau de bord</h1>
+      <hr class="uk-margin-medium-bottom">
+      <div class="uk-alert-danger" uk-alert>
+        <p><b><span class="uk-margin-small-right" uk-icon="icon: ban"></span>Ooops !</b> Il semblerait y avoir un
+          problème avec un de vos capteurs, veuillez prendre contact avec le service technique si ce message persiste.
+        </p>
+      </div>
+      <div class="uk-alert-warning" uk-alert>
+        <p><b><span class="uk-margin-small-right" uk-icon="icon: warning"></span>Attention !</b> Des restrictions d'eau
+          actuellements en cours dans votre département, l'arrosage y est <b>interdit</b>. De ce fait, nous vous conseillons de
+          <a href="#">désactiver l'arrosage</a> ou de relier votre système à une source d'eau de récupération.</p>
+      </div>
+      <div class="uk-grid-medium uk-child-width-expand@s uk-text-center" uk-grid>
+        <div class="widget">
+          <div class="uk-card uk-background-orange uk-card-body">
+            <i class="fa fa-thermometer-half"></i>&nbsp;&nbsp;&nbsp;18&#8239;°C
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Actuellement</span>
+            </div>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="uk-card uk-background-blue uk-card-body">
+            <i class="fa fa-tint"></i>&nbsp;&nbsp;&nbsp;2&#8239;mm
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Aujourd'hui</span>
+            </div>
+          </div>
+        </div>
+        <div class="widget">
+          <div class="uk-card uk-background-yellow uk-card-body">
+            <i class="fa fa-sun-o"></i>&nbsp;&nbsp;&nbsp;30&#8239;W/m<sup>2</sup>
+            <div class="uk-position-bottom info">
+              <span class="uk-text-small">Actuellement</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

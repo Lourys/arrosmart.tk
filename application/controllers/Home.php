@@ -9,11 +9,20 @@ class Home extends MY_Controller
     parent::__construct();
   }
 
-  public function index() {
-    echo password_hash('210100', PASSWORD_BCRYPT);
+  public function index()
+  {
+    redirect(route('home/dashboard'));
   }
 
-  public function test() {
+  public function dashboard()
+  {
+    $this->data['title'] = 'Tableau de bord';
+
+    $this->twig->display('home/dashboard', $this->data);
+  }
+
+  public function test()
+  {
     var_dump($this->session->userdata('token'));
   }
 

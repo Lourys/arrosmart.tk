@@ -1,0 +1,41 @@
+<header>
+  <nav class="uk-navbar uk-navbar-container uk-margin uk-box-shadow-medium">
+    <div class="uk-navbar-left">
+      <a href="#" class="uk-navbar-toggle" uk-toggle="target: #offcanvas-nav">
+        <span uk-navbar-toggle-icon></span> <span class="uk-margin-small-left">Menu</span>
+      </a>
+    </div>
+    <div class="uk-navbar-center">
+      <a class="uk-navbar-item uk-logo" href="{{ route('home/dashboard') }}"><img src="{{ img('logo.png') }}" class="logo" alt="Logo Arro'Smart"></a>
+    </div>
+    <div class="uk-navbar-right uk-visible@m">
+      <ul class="uk-navbar-nav">
+        <li><a href="{{ route('auth/logout') }}"><span class="uk-margin-small-right" uk-icon="icon: sign-out"></span> Déconnexion</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div id="offcanvas-nav" uk-offcanvas="overlay: true">
+    <div class="uk-offcanvas-bar">
+      <ul class="uk-nav uk-nav-default">
+        <li class="uk-nav-header">Accueil</li>
+        <li{% if current_url() == route('home/dashboard') %} class="uk-active"{% endif %}><a
+                  href="{{ route('home/dashboard') }}"><span class="uk-margin-small-right" uk-icon="icon: tv"></span> Tableau de bord</a>
+        </li>
+
+        <li class="uk-nav-header">Suivi détaillé</li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Consommation</a></li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: lifesaver"></span> Économies</a></li>
+        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: future"></span> Prévisions</a></li>
+
+        <li class="uk-nav-header">Mon compte</li>
+        <li{% if current_url() == route('users/account') %} class="uk-active"{% endif %}><a href="{{ route('users/account') }}"><span class="uk-margin-small-right" uk-icon="icon: user"></span> Mes informations</a></li>
+        <li{% if current_url() == route('users/settings') %} class="uk-active"{% endif %}><a href="{{ route('users/settings') }}"><span class="uk-margin-small-right" uk-icon="icon: settings"></span> Paramètres</a></li>
+
+        <li><br></li>
+        <li class="uk-nav-divider"><a href="{{ route('auth/logout') }}"><span class="uk-margin-small-right" uk-icon="icon: sign-out"></span>
+            Déconnexion</a></li>
+      </ul>
+      <p class="uk-text-meta uk-position-bottom uk-text-center">Arro'Smart | Tous droits réservés | © 2018</p>
+    </div>
+  </div>
+</header>

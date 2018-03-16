@@ -6,18 +6,22 @@ html, body {
   color: rgba(255, 255, 255, .8);
   background-color: #27ae60;
 }
+
 .uk-background-blue {
   color: rgba(255, 255, 255, .8);
   background-color: #2980b9;
 }
+
 .uk-background-orange {
   color: rgba(255, 255, 255, .8);
   background-color: #d35400;
 }
+
 .uk-background-red {
   color: rgba(255, 255, 255, .8);
   background-color: #c0392b;
 }
+
 .uk-background-yellow {
   color: rgba(255, 255, 255, 1);
   background-color: #f1c40f;
@@ -42,6 +46,11 @@ html, body {
   max-width: 90%;
 }
 
+#auth .logo {
+  margin: 0 auto 20px;
+  display: block;
+}
+
 #auth form .uk-inline {
   width: 100%;
 }
@@ -50,16 +59,15 @@ html, body {
   width: 100%;
 }
 
-
 /*****************/
 /***** ADMIN *****/
 /*****************/
 #dashboard {
-  background-image: url('../img/admin_background1.png');
+  background-image: url('../img/admin_background.png');
 }
 
 #dashboard .uk-navbar-container:not(.uk-navbar-transparent) {
-  background: rgba(255, 255, 255, .8);
+  background: rgba(255, 255, 255, .9);
 }
 
 #dashboard .widget {
@@ -81,4 +89,10 @@ html, body {
 }
 
 /* PERSONNAL INFORMATIONS */
-input[name="department"]:valid { text-transform: uppercase; }
+input[name="department"]:valid {
+  text-transform: uppercase;
+}
+
+input[name="last_name"]:valid {
+  text-transform: uppercase;
+}

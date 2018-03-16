@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 defined('API_ADDRESS') OR define('API_ADDRESS', 'http://localhost/api.arrosmart.tk/public/');
+defined('HTTP_HOST') OR define('HTTP_HOST', $_SERVER['HTTP_HOST']);
 
 /*
 |--------------------------------------------------------------------------

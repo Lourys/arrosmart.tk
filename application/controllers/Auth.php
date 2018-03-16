@@ -12,6 +12,15 @@ class Auth extends MY_Controller
   {
     $this->data['title'] = 'Authentification';
 
+    if ($this->auth->isLogged()) {
+      redirect(route('home/dashboard'));
+    }
+
     $this->twig->display('auth/index', $this->data);
+  }
+
+  public function logout()
+  {
+    $this->auth->logout();
   }
 }

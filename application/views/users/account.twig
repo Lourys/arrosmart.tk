@@ -1,0 +1,112 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+  <div class="uk-container uk-container-expand">
+    <ul class="uk-breadcrumb">
+      <li class="uk-disabled"><a>Mon compte</a></li>
+      <li><span>Mes informations</span></li>
+    </ul>
+    <div id="content" class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-card-title">Mes informations</h1>
+      <span></span>
+      <hr class="uk-margin-medium-bottom">
+      <form class="uk-form-horizontal uk-margin-medium">
+        <div class="uk-margin">
+          <label class="uk-form-label" for="first_name">PRÉNOM</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="first_name" type="text" placeholder="Votre nom de famille" name="first_name"
+                   value="{{ user.first_name }}" required>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="last_name">NOM</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="last_name" type="text" placeholder="Votre prénom" name="last_name" value="{{ user.last_name }}" required>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="department">DÉPARTEMENT (ID)</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="department" type="text" placeholder="86" maxlength="2" name="department"
+                   value="{{ user.department }}" required>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="email">EMAIL</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="email" type="email" placeholder="vous@exemple.fr" name="email" value="{{ user.email }}" required>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="password">MOT DE PASSE</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="password" type="password" placeholder="••••••••••••" minlength="8"
+                   name="password" required>
+            <span class="uk-text-meta">Le mot de passe doit contenir au moins 8 caractères.</span>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" for="password_confirm">CONFIRMATION DU MOT DE PASSE</label>
+          <div class="uk-form-controls">
+            <input class="uk-input" id="password_confirm" type="password" placeholder="••••••••••••" minlength="8"
+                   required>
+          </div>
+        </div>
+        <br class="uk-visible@m">
+        <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Éditer</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  {{ parent() }}
+  <script defer>
+    $(document).ready(function () {
+      var request;
+
+      // REGISTER FORM
+      $("#register").submit(function (event) {
+        event.preventDefault();
+        if (request) {
+          request.abort();
+        }
+
+        if ($("#password").val() !== $("#password_confirm").val()) {
+          UIkit.notification("<span uk-icon='icon: close'></span> Les mots de passe ne correspondent pas.", {status: 'danger'});
+          return;
+        }
+
+        var $form = $(this);
+        var $inputs = $form.find("input, select, button, textarea");
+        var serializedData = $form.serialize();
+        var buttonText = $form.find('button').html();
+        $form.find('button').html('<div uk-spinner></div>');
+        $inputs.prop("disabled", true);
+
+        request = $.ajax({
+          url: "http://localhost:8080/api.arrosmart.tk/public/users",
+          type: "post",
+          data: serializedData
+        });
+
+
+        request.done(function (response, textStatus, jqXHR) {
+          UIkit.notification("<span uk-icon='icon: check'></span> Votre compte a bien été créé, vous pouvez désormais vous connecter.", {status: 'success'});
+          $("#alreadyRegistered").click();
+        });
+        request.fail(function (jqXHR, textStatus, errorThrown) {
+          if (errorThrown === 'Unauthorized') {
+            UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect.", {status: 'danger'});
+          } else {
+            UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
+          }
+          $inputs.prop("disabled", false);
+        });
+        request.always(function () {
+          $form.find('button').html(buttonText);
+        });
+      });
+    });
+  </script>
+{% endblock %}

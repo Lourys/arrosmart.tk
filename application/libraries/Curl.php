@@ -18,4 +18,24 @@ class Curl
 
     return $result;
   }
+
+  public function get($url, $params)
+  {
+    $data = '';
+    foreach($params as $key=>$value)
+      $data .= $key.'='.$value.'&';
+    $data = trim($data, '&');
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url . '?' . $data);
+    curl_setopt($ch, CURLOPT_HEADER, FALSE);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 2);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    return $result;
+  }
 }

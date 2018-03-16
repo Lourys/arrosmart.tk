@@ -53,4 +53,10 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
+$route['dashboard'] = 'home/dashboard';
+
+$route['compte'] = 'users/account';
+$route['compte/parametres'] = 'users/settings';
+
 $route['authentification'] = 'auth/index';
+$route['deconnexion'] = 'auth/logout';

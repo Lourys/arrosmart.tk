@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr" class="uk-height-1-1">
+
+<head>
+  <title>{{ title }} | Arro'Smart</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/png" href="{{ img('favicon.png') }}"/>
+  {% block stylesheets %}
+    <link rel="stylesheet" href="{{ css('uikit.min') }}"/>
+    <link rel="stylesheet" href="{{ css('style.dev') }}"/>
+    <link rel="stylesheet" href="{{ css('font-awesome.min') }}"/>
+  {% endblock %}
+</head>
+
+<body id="dashboard" class="uk-animation-fade">
+
+{% include 'components/header.twig' %}
+
+
+{% block content %}{% endblock %}
+
+
+{% include 'components/footer.twig' %}
+
+{% block javascript %}
+  <script src="{{ js('jquery.min') }}"></script>
+  <script src="{{ js('uikit.min') }}" defer></script>
+  <script src="{{ js('uikit-icons.min') }}" defer></script>
+{% endblock %}
+</body>
+
+</html>

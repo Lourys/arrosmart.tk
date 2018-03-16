@@ -5,7 +5,7 @@
   <title>{{ title }} | Arro'Smart</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/png" href="assets/img/favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="{{ img('favicon.png') }}"/>
 
   <link rel="stylesheet" href="{{ css('uikit.min') }}"/>
   <link rel="stylesheet" href="{{ css('style.dev') }}"/>
@@ -15,8 +15,9 @@
 <div id="particles"></div>
 <div class="uk-height-1-1 uk-flex uk-flex-center uk-flex-middle">
   <div id="auth"
-       class="uk-card uk-card-default uk-card-hover uk-card-body uk-width-1-4@xl uk-width-1-3@m uk-width-3-5@s"
+       class="uk-card uk-card-default uk-card-hover uk-card-body uk-width-2-4@xl uk-width-1-3@l uk-width-1-2@m uk-width-3-5@s"
        uk-scrollspy="cls:uk-animation-fade">
+    <img src="{{ img('logo.png') }}" class="logo" alt="Logo Arro'Smart">
     <form id="login" class="uk-form-stacked" action="#" method="post">
       <h3 class="uk-heading-divider uk-text-primary uk-text-uppercase">
         Connexion
@@ -47,7 +48,8 @@
       <button class="uk-button uk-button-primary uk-width-1-1">Connexion</button>
       <hr>
       <div class="uk-text-center">
-        <a href="#" uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
+        <a href="#" id="notRegistered"
+           uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
            class="uk-button uk-button-text">Vous ne
           possédez pas de compte ?</a>
       </div>
@@ -56,15 +58,29 @@
       <h3 class="uk-heading-divider uk-text-primary uk-text-uppercase">
         Inscription
       </h3>
+      <div class="uk-grid-small" uk-grid>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="first_name">
+            Prénom :
+          </label>
+          <input class="uk-input" id="first_name" name="first_name" type="text" placeholder="Jean" required>
+        </div>
+        <div class="uk-width-1-2@s">
+          <label class="uk-form-label" for="last_name">
+            Nom :
+          </label>
+          <input class="uk-input" id="last_name" name="last_name" type="text" placeholder="DURAND" required>
+        </div>
+      </div>
       <div class="uk-margin">
-        <label class="uk-form-label" for="serial">
+        <label class="uk-form-label" for="serial_key">
           Numéro de série :
         </label>
         <div class="uk-form-controls">
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: tag"></span>
-            <input class="uk-input" id="serial" type="text" placeholder="WF6R-5R3B-VEWB-5MBY-QWZW"
-                   autofocus="autofocus">
+            <input class="uk-input" id="serial_key" name="serial_key" type="text" placeholder="WF6R-5R3B-VEWB-5MBY-QWZW"
+                   required>
           </div>
         </div>
       </div>
@@ -75,7 +91,7 @@
         <div class="uk-form-controls">
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: mail"></span>
-            <input class="uk-input" id="registerEmail" type="email" placeholder="vous@exemple.fr">
+            <input class="uk-input" id="registerEmail" name="email" type="email" placeholder="vous@exemple.fr" required>
           </div>
         </div>
       </div>
@@ -86,7 +102,7 @@
         <div class="uk-form-controls">
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: lock"></span>
-            <input class="uk-input" id="registerPassword" type="password" minlength="8" placeholder="••••••••••••">
+            <input class="uk-input" name="password" type="password" minlength="8" placeholder="••••••••••••" required>
           </div>
           <span class="uk-text-meta">Le mot de passe doit contenir au moins 8 caractères.</span>
         </div>
@@ -98,15 +114,16 @@
         <div class="uk-form-controls">
           <div class="uk-inline">
             <span class="uk-form-icon" uk-icon="icon: lock"></span>
-            <input class="uk-input" id="registerPasswordConfirmation" type="password" minlength="8"
-                   placeholder="••••••••••••">
+            <input class="uk-input" name="password_confirmation" type="password" minlength="8"
+                   placeholder="••••••••••••" required>
           </div>
         </div>
       </div>
       <button class="uk-button uk-button-primary uk-width-1-1">Inscription</button>
       <hr>
       <div class="uk-text-center">
-        <a href="#" uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
+        <a href="#" id="alreadyRegistered"
+           uk-toggle="target: form; animation: uk-animation-scale-up; queued: true; duration: 200"
            class="uk-button uk-button-text">Vous possédez déjà un compte ?</a>
       </div>
     </form>
@@ -124,6 +141,7 @@
 
     // LOGIN FORM
     $("#login").submit(function (event) {
+      UIkit.notification.closeAll();
       event.preventDefault();
       if (request) {
         request.abort();
@@ -136,25 +154,29 @@
       $inputs.prop("disabled", true);
 
       request = $.ajax({
-        url: "http://localhost:8080/api.arrosmart.tk/public/getAccessToken",
+        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/getAccessToken",
         type: "post",
         data: serializedData
       });
 
 
       request.done(function (response, textStatus, jqXHR) {
-        UIkit.notification("<span uk-icon='icon: check'></span> Vous avez été connecté avec succès, vous serez redirigé dans un instant", {status: 'success'});
-        window.setTimeout(function(){
+        UIkit.notification("<span uk-icon='icon: check'></span> Vous avez été connecté avec succès, vous allez être redirigé dans un instant.", {status: 'success'});
+        window.setTimeout(function () {
           {% if (this.input.get('redirect') != null) %}
-            window.location.replace("{{ this.input.get('redirect') }}?token=" + response.token);
+          window.location.replace("{{ this.input.get('redirect') }}?token=" + response.token);
           {% else %}
-            window.location.replace("{{ site_url() }}?token=" + response.token);
+          window.location.replace("{{ route('home/dashboard') }}?token=" + response.token);
           {% endif %}
-        }, 2500);
+        }, 750);
       });
       request.fail(function (jqXHR, textStatus, errorThrown) {
         if (errorThrown === 'Unauthorized') {
-          UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect", {status: 'danger'});
+          UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect.", {status: 'danger'});
+          $("#auth").removeClass('uk-animation-fade').addClass('uk-animation-shake');
+          window.setTimeout(function () {
+            $("#auth").removeClass('uk-animation-shake');
+          }, 500);
         } else {
           UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
         }
@@ -166,10 +188,13 @@
     });
     // REGISTER FORM
     $("#register").submit(function (event) {
+      UIkit.notification.closeAll();
+      $("input").removeClass('uk-form-danger');
       event.preventDefault();
       if (request) {
         request.abort();
       }
+
       var $form = $(this);
       var $inputs = $form.find("input, select, button, textarea");
       var serializedData = $form.serialize();
@@ -178,26 +203,38 @@
       $inputs.prop("disabled", true);
 
       request = $.ajax({
-        url: "http://172.20.80.238/api.arrosmart.tk/public/getAccessToken",
+        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/users",
         type: "post",
         data: serializedData
       });
 
 
       request.done(function (response, textStatus, jqXHR) {
-        UIkit.notification("<span uk-icon='icon: check'></span> Vous avez été connecté avec succès, vous serez redirigé dans un instant", {status: 'success'});
-        console.log(response)
+        UIkit.notification("<span uk-icon='icon: check'></span> Votre compte a bien été créé, vous pouvez désormais vous connecter.", {status: 'success'});
       });
       request.fail(function (jqXHR, textStatus, errorThrown) {
-        if (errorThrown === 'Unauthorized') {
-          UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect", {status: 'danger'});
+        var errors = ' ';
+        for (property in jqXHR.responseJSON) {
+          for (i in property) {
+            if (jqXHR.responseJSON[property][i] != undefined) {
+              errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
+            }
+          }
+          $("#register").find("input[name=" + property + "]").addClass('uk-form-danger');
+        }
+        if (errorThrown === 'Unprocessable Entity') {
+          UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
+          $("#auth").removeClass('uk-animation-fade').addClass('uk-animation-shake');
+          window.setTimeout(function () {
+            $("#auth").removeClass('uk-animation-shake');
+          }, 500);
         } else {
           UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
         }
+        $inputs.prop("disabled", false);
       });
       request.always(function () {
         $form.find('button').html(buttonText);
-        $inputs.prop("disabled", false);
       });
     });
   });
