@@ -1,0 +1,136 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+  <div class="uk-container uk-container-expand">
+    <ul class="uk-breadcrumb">
+      <li class="uk-disabled"><a>Suivi détaillé</a></li>
+      <li><span>Consommation</span></li>
+    </ul>
+    <div id="content" class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-card-title">Consommation</h1>
+      <hr class="uk-margin-medium-bottom">
+      <div class="uk-grid-small uk-child-width-1-2@m" uk-grid>
+        <div>
+          <div class="uk-card uk-card-default">
+            <div class="uk-card-header">
+              <h3 class="uk-card-title uk-margin-remove-bottom">Électricité</h3>
+              <p class="uk-text-meta uk-margin-remove-top">Les 30 derniers jours</p>
+            </div>
+            <div class="uk-card-body">
+              <canvas id="electricity"></canvas>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="uk-card uk-card-default">
+            <div class="uk-card-header">
+              <h3 class="uk-card-title uk-margin-remove-bottom">Eau</h3>
+              <p class="uk-text-meta uk-margin-remove-top">Les 30 derniers jours</p>
+            </div>
+            <div class="uk-card-body">
+              <canvas id="water"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  {{ parent() }}
+  <script src="{{ js('chart.bundle.min') }}"></script>
+  <script defer>
+    var electricity = {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Électricité consommée',
+          borderColor: '#e74c3c',
+          backgroundColor: '#e74c3c',
+          data: [
+            2.2, 2.4, 2.6, 2, 2.4, 1.9, 2.6
+          ],
+          fill: false
+        }, {
+          label: 'Électricité produite',
+          borderColor: '#3498db',
+          backgroundColor: '#3498db',
+          data: [
+            3.2, 2.8, 2.2, 2.6, 2.9, 3, 1.6
+          ],
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        tooltips: {
+          mode: 'index',
+          intersect: false
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        },
+        scales: {
+          xAxes: [{
+            display: true
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Quantité (Wh)'
+            }
+          }]
+        }
+      }
+    };
+    var water = {
+      type: 'line',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          label: 'Eau consommée',
+          borderColor: '#e74c3c',
+          backgroundColor: '#e74c3c',
+          data: [
+            0.2, 0.4, 0.6, 0, 0.4, 0.9, 0.6
+          ],
+          fill: false
+        }]
+      },
+      options: {
+        responsive: true,
+        tooltips: {
+          mode: 'index',
+          intersect: false
+        },
+        hover: {
+          mode: 'nearest',
+          intersect: true
+        },
+        scales: {
+          xAxes: [{
+            display: true
+          }],
+          yAxes: [{
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Quantité (m3)'
+            }
+          }]
+        }
+      }
+    };
+
+    window.onload = function () {
+      var electricityDoc = document.getElementById('electricity').getContext('2d');
+      window.myLine = new Chart(electricityDoc, electricity);
+      var waterDoc = document.getElementById('water').getContext('2d');
+      window.myLine = new Chart(waterDoc, water);
+    };
+  </script>
+{% endblock %}

@@ -10,7 +10,7 @@
       <h1 class="uk-card-title">Mes informations</h1>
       <span></span>
       <hr class="uk-margin-medium-bottom">
-      <form class="uk-form-horizontal uk-margin-medium">
+      <form id="account" class="uk-form-horizontal uk-margin-medium">
         <div class="uk-margin">
           <label class="uk-form-label" for="first_name">PRÉNOM</label>
           <div class="uk-form-controls">
@@ -41,15 +41,14 @@
           <label class="uk-form-label" for="password">MOT DE PASSE</label>
           <div class="uk-form-controls">
             <input class="uk-input" id="password" type="password" placeholder="••••••••••••" minlength="8"
-                   name="password" required>
+                   name="password">
             <span class="uk-text-meta">Le mot de passe doit contenir au moins 8 caractères.</span>
           </div>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" for="password_confirm">CONFIRMATION DU MOT DE PASSE</label>
+          <label class="uk-form-label" for="password_confirmation">CONFIRMATION DU MOT DE PASSE</label>
           <div class="uk-form-controls">
-            <input class="uk-input" id="password_confirm" type="password" placeholder="••••••••••••" minlength="8"
-                   required>
+            <input class="uk-input" id="password_confirmation" type="password" placeholder="••••••••••••" minlength="8" name="password_confirmation">
           </div>
         </div>
         <br class="uk-visible@m">
@@ -64,17 +63,13 @@
   <script defer>
     $(document).ready(function () {
       var request;
-
-      // REGISTER FORM
-      $("#register").submit(function (event) {
+      // ACCOUNT FORM
+      $("#account").submit(function (event) {
+        UIkit.notification.closeAll();
+        $("input").removeClass('uk-form-danger');
         event.preventDefault();
         if (request) {
           request.abort();
-        }
-
-        if ($("#password").val() !== $("#password_confirm").val()) {
-          UIkit.notification("<span uk-icon='icon: close'></span> Les mots de passe ne correspondent pas.", {status: 'danger'});
-          return;
         }
 
         var $form = $(this);
@@ -85,26 +80,38 @@
         $inputs.prop("disabled", true);
 
         request = $.ajax({
-          url: "http://localhost:8080/api.arrosmart.tk/public/users",
-          type: "post",
+          url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/user?token={{ this.session.userdata('token') }}",
+          type: "put",
           data: serializedData
         });
 
 
         request.done(function (response, textStatus, jqXHR) {
-          UIkit.notification("<span uk-icon='icon: check'></span> Votre compte a bien été créé, vous pouvez désormais vous connecter.", {status: 'success'});
-          $("#alreadyRegistered").click();
+          UIkit.notification("<span uk-icon='icon: check'></span> Vos informations ont été modifiées avec succès !", {status: 'success'});
         });
         request.fail(function (jqXHR, textStatus, errorThrown) {
-          if (errorThrown === 'Unauthorized') {
-            UIkit.notification("<span uk-icon='icon: close'></span> Email ou mot de passe incorrect.", {status: 'danger'});
+          var errors = ' ';
+          for (property in jqXHR.responseJSON) {
+            for (i in property) {
+              if (jqXHR.responseJSON[property][i] != undefined) {
+                errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
+              }
+            }
+            $("#account").find("input[name=" + property + "]").addClass('uk-form-danger');
+          }
+          if (errorThrown === 'Unprocessable Entity') {
+            UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
+            $("#auth").removeClass('uk-animation-fade').addClass('uk-animation-shake');
+            window.setTimeout(function () {
+              $("#auth").removeClass('uk-animation-shake');
+            }, 500);
           } else {
             UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
           }
-          $inputs.prop("disabled", false);
         });
         request.always(function () {
           $form.find('button').html(buttonText);
+          $inputs.prop("disabled", false);
         });
       });
     });

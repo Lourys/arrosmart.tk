@@ -55,6 +55,8 @@ $route['translate_uri_dashes'] = FALSE;
 
 $route['dashboard'] = 'home/dashboard';
 
+$route['suivi/consommation'] = 'monitoring/consumption';
+
 $route['compte'] = 'users/account';
 $route['compte/parametres'] = 'users/settings';
 

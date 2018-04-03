@@ -22,8 +22,11 @@
                   href="{{ route('home/dashboard') }}"><span class="uk-margin-small-right" uk-icon="icon: tv"></span> Tableau de bord</a>
         </li>
 
+        <li class="uk-nav-header">Gestion du système</li>
+        <li{% if current_url() == route('management/edit_schedule') %} class="uk-active"{% endif %}><a href="{{ route('management/edit_schedule') }}"><span class="uk-margin-small-right" uk-icon="icon: pencil"></span> Édition du programme</a></li>
+
         <li class="uk-nav-header">Suivi détaillé</li>
-        <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Consommation</a></li>
+        <li{% if current_url() == route('monitoring/consumption') %} class="uk-active"{% endif %}><a href="{{ route('monitoring/consumption') }}"><span class="uk-margin-small-right" uk-icon="icon: bolt"></span> Consommation</a></li>
         <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: lifesaver"></span> Économies</a></li>
         <li><a href="#"><span class="uk-margin-small-right" uk-icon="icon: future"></span> Prévisions</a></li>
 

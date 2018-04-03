@@ -1,0 +1,58 @@
+{% extends 'layout.twig' %}
+
+{% block content %}
+  <div class="uk-container uk-container-expand">
+    <ul class="uk-breadcrumb">
+      <li class="uk-disabled"><a>Gestion du système</a></li>
+      <li><span>Édition du programme</span></li>
+    </ul>
+    <div id="content" class="uk-card uk-card-default uk-card-body">
+      <h1 class="uk-card-title">Édition du programme</h1>
+      <hr class="uk-margin-medium-bottom">
+
+      <form id="schedule" class="uk-form-stacked uk-margin-medium uk-grid-small" uk-grid>
+        <div class="uk-width-2-3@s">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="end_flow">DÉBIT D'EAU EN SORTIE DU SYSTÈME D'ARROSAGE :</label>
+            <div class="uk-form-controls uk-inline">
+              <span class="uk-form-icon uk-form-icon-flip">m<sup>3</sup>/h&nbsp;</span>
+              <input class="uk-input" id="end_flow" type="number" placeholder="0.84" name="end_flow"
+                     value="" min="0" step="0.01" required>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-3@s uk-text-right@s">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="first_name">QUANTITÉ D'EAU A UTILISER :</label>
+            <div class="uk-form-controls uk-inline">
+              <span class="uk-form-icon uk-form-icon-flip">m<sup>3</sup>&nbsp;</span>
+              <input class="uk-input" id="first_name" type="number" placeholder="2" name="first_name"
+                     value="" min="0" step="0.01" required>
+            </div>
+          </div>
+          <div class="uk-margin">
+            <label class="uk-form-label" for="first_name">DURÉE D'ARROSAGE :</label>
+            <div class="uk-form-controls uk-inline">
+              <span class="uk-form-icon uk-form-icon-flip">min&nbsp;</span>
+              <input class="uk-input" id="first_name" type="number" placeholder="143" name="first_name"
+                     value="" min="0" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="uk-width-1-1">
+          ddzed
+        </div>
+
+
+        <br>
+
+        <div class="uk-width-1-1">
+          <br class="uk-visible@m">
+          <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Éditer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
