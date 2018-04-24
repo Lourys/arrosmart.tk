@@ -5,6 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Twig twig
  * @property Auth_Manager auth
  * @property Curl curl
+ * @property CI_Session session
  */
 class MY_Controller extends CI_Controller
 {
@@ -48,7 +49,7 @@ class MY_Controller extends CI_Controller
       }
     } else {
       $result = $this->curl->post(API_ADDRESS . 'checkAccessTokenValidity', ['token' => $this->session->userdata('token')]);
-      if (!json_decode($result, true)['valid']) {
+      if ($result && !json_decode($result, true)['valid']) {
         $this->auth->logout();
       }
     }

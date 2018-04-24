@@ -10,44 +10,80 @@
       <h1 class="uk-card-title">Édition du programme</h1>
       <hr class="uk-margin-medium-bottom">
 
-      <form id="schedule" class="uk-form-stacked uk-margin-medium uk-grid-small" uk-grid>
-        <div class="uk-width-2-3@s">
+      <form id="schedule" class="uk-form-stacked uk-margin-medium uk-grid-small uk-flex-bottom" uk-grid>
+        <div class="uk-width-1-3@s">
           <div class="uk-margin">
             <label class="uk-form-label" for="end_flow">DÉBIT D'EAU EN SORTIE DU SYSTÈME D'ARROSAGE :</label>
-            <div class="uk-form-controls uk-inline">
-              <span class="uk-form-icon uk-form-icon-flip">m<sup>3</sup>/h&nbsp;</span>
-              <input class="uk-input" id="end_flow" type="number" placeholder="0.84" name="end_flow"
+            <div class="uk-form-controls uk-inline uk-width-1-1">
+              <span class="uk-form-icon uk-form-icon-flip">l/h&nbsp;</span>
+              <input class="uk-input" id="end_flow" type="number" placeholder="1280" name="end_flow"
                      value="" min="0" step="0.01" required>
             </div>
           </div>
         </div>
-        <div class="uk-width-1-3@s uk-text-right@s">
+        <div class="uk-width-1-3@s">
           <div class="uk-margin">
-            <label class="uk-form-label" for="first_name">QUANTITÉ D'EAU A UTILISER :</label>
-            <div class="uk-form-controls uk-inline">
-              <span class="uk-form-icon uk-form-icon-flip">m<sup>3</sup>&nbsp;</span>
-              <input class="uk-input" id="first_name" type="number" placeholder="2" name="first_name"
+            <label class="uk-form-label" for="volume">QUANTITÉ D'EAU A UTILISER :</label>
+            <div class="uk-form-controls uk-inline uk-inline uk-width-1-1">
+              <span class="uk-form-icon uk-form-icon-flip">l&nbsp;</span>
+              <input class="uk-input" id="volume" type="number" placeholder="500" name="volume"
                      value="" min="0" step="0.01" required>
             </div>
           </div>
+        </div>
+        <div class="uk-width-1-3@s">
           <div class="uk-margin">
-            <label class="uk-form-label" for="first_name">DURÉE D'ARROSAGE :</label>
-            <div class="uk-form-controls uk-inline">
+            <label class="uk-form-label" for="duration">DURÉE D'ARROSAGE :</label>
+            <div class="uk-form-controls uk-inline uk-width-1-1">
               <span class="uk-form-icon uk-form-icon-flip">min&nbsp;</span>
-              <input class="uk-input" id="first_name" type="number" placeholder="143" name="first_name"
-                     value="" min="0" step="0.01" required>
+              <input class="uk-input uk-disabled" id="duration" type="text" placeholder="?" name="duration"
+                     value="" min="0" step="0.01">
             </div>
           </div>
         </div>
-
+        <div class="uk-width-1-1">
+          <div class="uk-width-1-3@l uk-width1-2@m days">
+            <label>JOURS AU COURS DESQUELS IL FAUT ARROSER :</label>
+            <div class="uk-flex-around uk-margin" style="margin-left: 0;" uk-grid>
+              <label for="monday" class="btn-day uk-button uk-button-default">Lun</label>
+              <label for="tuesday" class="btn-day uk-button uk-button-default">Mar</label>
+              <label for="wednesday" class="btn-day uk-button uk-button-default">Mer</label>
+              <label for="thursday" class="btn-day uk-button uk-button-default">Jeu</label>
+              <label for="friday" class="btn-day uk-button uk-button-default">Ven</label>
+              <label for="saturday" class="btn-day uk-button uk-button-default">Sam</label>
+              <label for="sunday" class="btn-day uk-button uk-button-default">Dim</label>
+              <input type="checkbox" id="monday" name="days[]" value="monday" class="uk-hidden" data-day="monday">
+              <input type="checkbox" id="tuesday" name="days[]" value="tuesday" class="uk-hidden" data-day="tuesday">
+              <input type="checkbox" id="wednesday" name="days[]" value="wednesday" class="uk-hidden"
+                     data-day="wednesday">
+              <input type="checkbox" id="thursday" name="days[]" value="thursday" class="uk-hidden" data-day="thursday">
+              <input type="checkbox" id="friday" name="days[]" value="friday" class="uk-hidden" data-day="friday">
+              <input type="checkbox" id="saturday" name="days[]" value="saturday" class="uk-hidden" data-day="saturday">
+              <input type="checkbox" id="sunday" name="days[]" value="sunday" class="uk-hidden" data-day="sunday">
+            </div>
+          </div>
+        </div>
 
         <div class="uk-width-1-1">
-          ddzed
+          <div class="uk-width-1-3@l uk-width1-2@m moment-days">
+            <label>MOMENT DE L'ARROSAGE :</label>
+            <div class="uk-flex-around uk-margin" style="margin-left: 0;" uk-grid>
+              <label class="btn-moment uk-button uk-button-default">
+                <input class="uk-hidden" type="radio" name="moment" value="morning" data-moment="morning">
+                Matinée
+              </label>
+              <label class="btn-moment uk-button uk-button-default">
+                <input class="uk-hidden" type="radio" name="moment" value="afternoon" data-moment="afternoon">
+                Après-Midi
+              </label>
+              <label class="btn-moment uk-button uk-button-default">
+                <input class="uk-hidden" type="radio" name="moment" value="evening" data-moment="evening">
+                Soirée
+              </label>
+            </div>
+          </div>
         </div>
-
-
         <br>
-
         <div class="uk-width-1-1">
           <br class="uk-visible@m">
           <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Éditer</button>
@@ -55,4 +91,114 @@
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block javascript %}
+  {{ parent() }}
+
+  <script defer>
+    $(document).ready(function () {
+      var $label;
+      var $parent;
+
+      var end_flow_val;
+      var volume_val;
+
+      function checkCheckbox(elem) {
+        $label = $("label[for=" + $(elem).data("day") + "]");
+        if ($(elem).is(":checked")) {
+          $label.removeClass("uk-button-default");
+          $label.addClass("uk-button-primary");
+        } else {
+          $label.removeClass("uk-button-primary");
+          $label.addClass("uk-button-default");
+        }
+      }
+
+      function checkRadio(elem) {
+        $("input[type=radio]").each(function () {
+          $parent = $(this).parent();
+          $parent.removeClass("uk-button-primary");
+          $parent.addClass("uk-button-default");
+        });
+        $label = $(elem).parent();
+        $label.removeClass("uk-button-default");
+        $label.addClass("uk-button-primary");
+      }
+
+      function duration_calc() {
+        volume_val = $("#volume").val();
+        end_flow_val = $("#end_flow").val();
+        if (end_flow_val !== '' && volume_val !== '') {
+          $("#duration").val(Math.round((volume_val / end_flow_val) * 60 * 100) / 100)
+        }
+      }
+
+      $("input[type=checkbox]").change(function () {
+        checkCheckbox(this);
+      });
+      $("input[type=radio]").change(function () {
+        checkRadio(this);
+      });
+      $("#end_flow").change(function () {
+        duration_calc();
+      });
+      $("#end_flow").keyup(function () {
+        duration_calc();
+      });
+      $("#volume").change(function () {
+        duration_calc();
+      });
+      $("#volume").keyup(function () {
+        duration_calc();
+      });
+
+    });
+    $("#schedule").submit(function (event) {
+      var request;
+      event.preventDefault();
+      if (request) {
+        request.abort();
+      }
+
+      var $form = $(this);
+      var $inputs = $form.find("input, select, button, textarea");
+      var serializedData = $form.serialize();
+      var buttonText = $form.find('button').html();
+      $form.find('button').html('<div uk-spinner></div>');
+      $inputs.prop("disabled", true);
+
+      request = $.ajax({
+        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/schedule?token={{ this.session.userdata('token') }}",
+        type: "put",
+        data: serializedData
+      });
+
+      request.done(function (response, textStatus, jqXHR) {
+        UIkit.notification("<span uk-icon='icon: check'></span> Le programme a été modifié avec succès !", {status: 'success'});
+      });
+      request.fail(function (jqXHR, textStatus, errorThrown) {
+        var errors = ' ';
+        for (property in jqXHR.responseJSON) {
+          for (i in property) {
+            if (jqXHR.responseJSON[property][i] != undefined) {
+              errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
+            }
+          }
+          if (property !== 'days[]') {
+            $("#schedule").find("input[name=" + property + "]").addClass('uk-form-danger');
+          }
+        }
+        if (errorThrown === 'Unprocessable Entity') {
+          UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
+        } else {
+          UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
+        }
+      });
+      request.always(function () {
+        $form.find('button').html(buttonText);
+        $inputs.prop("disabled", false);
+      });
+    });
+  </script>
 {% endblock %}

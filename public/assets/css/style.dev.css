@@ -93,6 +93,38 @@ html, body {
   vertical-align: text-top;
 }
 
+#dashboard .days {
+  display: block;
+  margin: 25px auto 5px;
+  text-align: center;
+}
+
+#dashboard .btn-day {
+  padding: 0 5px;
+  border-radius: 50%;
+  width: 45px;
+  height: 42px;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+#dashboard .moment-days {
+  display: block;
+  margin: 15px auto;
+  text-align: center;
+}
+
+#dashboard .moment-days .btn-moment {
+  padding-left: 30px;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+
+
 /* PERSONNAL INFORMATIONS */
 input[name="department"]:valid {
   text-transform: uppercase;
