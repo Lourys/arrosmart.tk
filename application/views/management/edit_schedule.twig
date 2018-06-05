@@ -17,7 +17,7 @@
             <div class="uk-form-controls uk-inline uk-width-1-1">
               <span class="uk-form-icon uk-form-icon-flip">l/h&nbsp;</span>
               <input class="uk-input" id="end_flow" type="number" placeholder="1280" name="end_flow"
-                     value="" min="0" step="0.01" required>
+                     value="{{ schedule.end_flow * 1000 * 3600 }}" min="0" step="0.1" required>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="uk-form-controls uk-inline uk-inline uk-width-1-1">
               <span class="uk-form-icon uk-form-icon-flip">l&nbsp;</span>
               <input class="uk-input" id="volume" type="number" placeholder="500" name="volume"
-                     value="" min="0" step="0.01" required>
+                     value="{{ schedule.volume * 1000 }}" min="0" step="0.5" required>
             </div>
           </div>
         </div>
@@ -36,8 +36,18 @@
             <label class="uk-form-label" for="duration">DURÉE D'ARROSAGE :</label>
             <div class="uk-form-controls uk-inline uk-width-1-1">
               <span class="uk-form-icon uk-form-icon-flip">min&nbsp;</span>
-              <input class="uk-input uk-disabled" id="duration" type="text" placeholder="?" name="duration"
-                     value="" min="0" step="0.01">
+              <input class="uk-input uk-disabled" id="duration" type="text" placeholder="?" name="duration" min="0"
+                     step="0.01">
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-1">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="duration">SURFACE IRRIGUÉE :</label>
+            <div class="uk-form-controls uk-inline uk-width-1-1">
+              <span class="uk-form-icon uk-form-icon-flip">m²&nbsp;</span>
+              <input class="uk-input" id="surface" type="number" placeholder="500" name="surface" min="0"
+                     value="{{ schedule.surface }}" step="0.1" required>
             </div>
           </div>
         </div>
@@ -52,14 +62,20 @@
               <label for="friday" class="btn-day uk-button uk-button-default">Ven</label>
               <label for="saturday" class="btn-day uk-button uk-button-default">Sam</label>
               <label for="sunday" class="btn-day uk-button uk-button-default">Dim</label>
-              <input type="checkbox" id="monday" name="days[]" value="monday" class="uk-hidden" data-day="monday">
-              <input type="checkbox" id="tuesday" name="days[]" value="tuesday" class="uk-hidden" data-day="tuesday">
+              <input type="checkbox" id="monday" name="days[]" value="monday" class="uk-hidden" data-day="monday"
+                     {% if in_array('monday', schedule.days) %}checked{% endif %}>
+              <input type="checkbox" id="tuesday" name="days[]" value="tuesday" class="uk-hidden" data-day="tuesday"
+                     {% if in_array('tuesday', schedule.days) %}checked{% endif %}>
               <input type="checkbox" id="wednesday" name="days[]" value="wednesday" class="uk-hidden"
-                     data-day="wednesday">
-              <input type="checkbox" id="thursday" name="days[]" value="thursday" class="uk-hidden" data-day="thursday">
-              <input type="checkbox" id="friday" name="days[]" value="friday" class="uk-hidden" data-day="friday">
-              <input type="checkbox" id="saturday" name="days[]" value="saturday" class="uk-hidden" data-day="saturday">
-              <input type="checkbox" id="sunday" name="days[]" value="sunday" class="uk-hidden" data-day="sunday">
+                     data-day="wednesday" {% if in_array('wednesday', schedule.days) %}checked{% endif %}>
+              <input type="checkbox" id="thursday" name="days[]" value="thursday" class="uk-hidden" data-day="thursday"
+                     {% if in_array('thursday', schedule.days) %}checked{% endif %}>
+              <input type="checkbox" id="friday" name="days[]" value="friday" class="uk-hidden" data-day="friday"
+                     {% if in_array('friday', schedule.days) %}checked{% endif %}>
+              <input type="checkbox" id="saturday" name="days[]" value="saturday" class="uk-hidden" data-day="saturday"
+                     {% if in_array('saturday', schedule.days) %}checked{% endif %}>
+              <input type="checkbox" id="sunday" name="days[]" value="sunday" class="uk-hidden" data-day="sunday"
+                     {% if in_array('sunday', schedule.days) %}checked{% endif %}>
             </div>
           </div>
         </div>
@@ -69,15 +85,18 @@
             <label>MOMENT DE L'ARROSAGE :</label>
             <div class="uk-flex-around uk-margin" style="margin-left: 0;" uk-grid>
               <label class="btn-moment uk-button uk-button-default">
-                <input class="uk-hidden" type="radio" name="moment" value="morning" data-moment="morning">
+                <input class="uk-hidden" type="radio" name="moment" value="morning" data-moment="morning"
+                       {% if schedule.moment == 'morning' %}checked{% endif %}>
                 Matinée
               </label>
               <label class="btn-moment uk-button uk-button-default">
-                <input class="uk-hidden" type="radio" name="moment" value="afternoon" data-moment="afternoon">
+                <input class="uk-hidden" type="radio" name="moment" value="afternoon" data-moment="afternoon"
+                       {% if schedule.moment == 'afternoon' %}checked{% endif %}>
                 Après-Midi
               </label>
               <label class="btn-moment uk-button uk-button-default">
-                <input class="uk-hidden" type="radio" name="moment" value="evening" data-moment="evening">
+                <input class="uk-hidden" type="radio" name="moment" value="evening" data-moment="evening"
+                       {% if schedule.moment == 'evening' %}checked{% endif %}>
                 Soirée
               </label>
             </div>
@@ -94,111 +113,137 @@
 {% endblock %}
 
 {% block javascript %}
-  {{ parent() }}
+{{ parent() }}
 
-  <script defer>
-    $(document).ready(function () {
-      var $label;
-      var $parent;
+<script defer>
+  $(document).ready(function () {
+    var $label;
+    var $parent;
 
-      var end_flow_val;
-      var volume_val;
+    var end_flow_val;
+    var volume_val;
 
-      function checkCheckbox(elem) {
-        $label = $("label[for=" + $(elem).data("day") + "]");
-        if ($(elem).is(":checked")) {
+    duration_calc();
+    $("input[type=checkbox]").each(function () {
+      checkCheckbox(this);
+    });
+    checkRadio();
+
+
+    $("input[type=checkbox]").change(function () {
+      checkCheckbox(this);
+    });
+    $("input[type=radio]").change(function () {
+      checkRadio();
+    });
+    $("#end_flow").change(function () {
+      duration_calc();
+    });
+    $("#end_flow").keyup(function () {
+      duration_calc();
+    });
+    $("#volume").change(function () {
+      duration_calc();
+    });
+    $("#volume").keyup(function () {
+      duration_calc();
+    });
+
+
+    function checkCheckbox(elem) {
+      $label = $("label[for=" + $(elem).data("day") + "]");
+      if ($(elem).is(":checked")) {
+        $label.removeClass("uk-button-default");
+        $label.addClass("uk-button-primary");
+      } else {
+        $label.removeClass("uk-button-primary");
+        $label.addClass("uk-button-default");
+      }
+    }
+
+    function checkRadio() {
+      $("input[type=radio]").each(function () {
+        $parent = $(this).parent();
+        if ($(this).is(":checked")) {
+          $label = $(this).parent();
           $label.removeClass("uk-button-default");
           $label.addClass("uk-button-primary");
         } else {
-          $label.removeClass("uk-button-primary");
-          $label.addClass("uk-button-default");
-        }
-      }
-
-      function checkRadio(elem) {
-        $("input[type=radio]").each(function () {
-          $parent = $(this).parent();
           $parent.removeClass("uk-button-primary");
           $parent.addClass("uk-button-default");
-        });
-        $label = $(elem).parent();
-        $label.removeClass("uk-button-default");
-        $label.addClass("uk-button-primary");
-      }
-
-      function duration_calc() {
-        volume_val = $("#volume").val();
-        end_flow_val = $("#end_flow").val();
-        if (end_flow_val !== '' && volume_val !== '') {
-          $("#duration").val(Math.round((volume_val / end_flow_val) * 60 * 100) / 100)
         }
+      });
+    }
+
+    function duration_calc() {
+      volume_val = $("#volume").val();
+      end_flow_val = $("#end_flow").val();
+      if (end_flow_val !== '' && volume_val !== '') {
+        $("#duration").val(Math.round((volume_val / end_flow_val) * 60 * 100) / 100)
       }
+    }
 
-      $("input[type=checkbox]").change(function () {
-        checkCheckbox(this);
-      });
-      $("input[type=radio]").change(function () {
-        checkRadio(this);
-      });
-      $("#end_flow").change(function () {
-        duration_calc();
-      });
-      $("#end_flow").keyup(function () {
-        duration_calc();
-      });
-      $("#volume").change(function () {
-        duration_calc();
-      });
-      $("#volume").keyup(function () {
-        duration_calc();
-      });
+  });
+  $("#schedule").submit(function (event) {
+    var request;
+    event.preventDefault();
+    if (request) {
+      request.abort();
+    }
 
+    var $form = $(this);
+    var $inputs = $form.find("input, select, button, textarea");
+    var serializedData = $form.serialize();
+    var buttonText = $form.find('button').html();
+    $form.find('button').html('<div uk-spinner></div>');
+    $inputs.prop("disabled", true);
+    console.log(serializedData);
+
+    var formData = {
+        'end_flow': $("#end_flow").val() / 1000 / 3600,
+        'volume': $("#volume").val() / 1000,
+        'duration': $("#duration").val() * 60,
+        'surface': $("#surface").val(),
+        'days[]': [],
+        'moment': $('input[name=moment]:checked').val(),
+      };
+    $(":checked").each(function() {
+      formData['days[]'].push($(this).val());
     });
-    $("#schedule").submit(function (event) {
-      var request;
-      event.preventDefault();
-      if (request) {
-        request.abort();
-      }
 
-      var $form = $(this);
-      var $inputs = $form.find("input, select, button, textarea");
-      var serializedData = $form.serialize();
-      var buttonText = $form.find('button').html();
-      $form.find('button').html('<div uk-spinner></div>');
-      $inputs.prop("disabled", true);
+    console.log(formData);
 
-      request = $.ajax({
-        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/schedule?token={{ this.session.userdata('token') }}",
-        type: "put",
-        data: serializedData
-      });
+    request = $.ajax({
+      url: "https://api.arrosmart.tk/schedule?token={{ this.session.userdata('token') }}",
+      type: "put",
+      data: formData
+    });
 
-      request.done(function (response, textStatus, jqXHR) {
-        UIkit.notification("<span uk-icon='icon: check'></span> Le programme a été modifié avec succès !", {status: 'success'});
-      });
-      request.fail(function (jqXHR, textStatus, errorThrown) {
-        var errors = ' ';
-        for (property in jqXHR.responseJSON) {
-          for (i in property) {
-            if (jqXHR.responseJSON[property][i] != undefined) {
-              errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
-            }
-          }
-          if (property !== 'days[]') {
-            $("#schedule").find("input[name=" + property + "]").addClass('uk-form-danger');
+    request.done(function (response, textStatus, jqXHR) {
+      UIkit.notification("<span uk-icon='icon: check'></span> Le programme a été modifié avec succès !", {status: 'success'});
+    });
+    request.fail(function (jqXHR, textStatus, errorThrown) {
+      var errors = ' ';
+      for (property in jqXHR.responseJSON) {
+        for (i in property) {
+          if (jqXHR.responseJSON[property][i] != undefined) {
+            errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
           }
         }
-        if (errorThrown === 'Unprocessable Entity') {
-          UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
-        } else {
-          UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
+        if (property !== 'days[]') {
+          $("#schedule").find("input[name=" + property + "]").addClass('uk-form-danger');
         }
-      });
-      request.always(function () {
-        $form.find('button').html(buttonText);
-        $inputs.prop("disabled", false);
-      });
+      }
+      if (errorThrown === 'Unprocessable Entity') {
+        UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
+      } else {
+        UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
+      }
     });
-  </script>
+    request.always(function () {
+      $form.find('button').html(buttonText);
+      $inputs.prop("disabled", false);
+    });
+  });
+</script>
 {% endblock %}

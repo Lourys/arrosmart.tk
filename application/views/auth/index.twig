@@ -154,7 +154,7 @@
       $inputs.prop("disabled", true);
 
       request = $.ajax({
-        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/getAccessToken",
+        url: "https://api.arrosmart.tk/getAccessToken",
         type: "post",
         data: serializedData
       });
@@ -203,7 +203,7 @@
       $inputs.prop("disabled", true);
 
       request = $.ajax({
-        url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/users",
+        url: "https://api.arrosmart.tk/users",
         type: "post",
         data: serializedData
       });

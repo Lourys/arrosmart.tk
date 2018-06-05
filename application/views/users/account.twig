@@ -80,7 +80,7 @@
         $inputs.prop("disabled", true);
 
         request = $.ajax({
-          url: "http://{{ constant('HTTP_HOST') }}/api.arrosmart.tk/public/user?token={{ this.session.userdata('token') }}",
+          url: "https://api.arrosmart.tk/user?token={{ this.session.userdata('token') }}",
           type: "put",
           data: serializedData
         });

@@ -10,11 +10,81 @@
       <h1 class="uk-card-title">Paramètres</h1>
       <span></span>
       <hr class="uk-margin-medium-bottom">
-      <form class="uk-form-horizontal uk-margin-medium">
+      <form id="settings" class="uk-form-stacked uk-margin-medium uk-grid-small uk-flex-bottom" uk-grid>
+        <div class="uk-width-1-1">
+          <div class="uk-margin">
+            <label class="uk-form-label" for="water_price">Prix de l'eau :</label>
+            <div class="uk-form-controls uk-inline uk-width-1-1">
+              <span class="uk-form-icon uk-form-icon-flip">€/m²&nbsp;</span>
+              <input class="uk-input" id="water_price" type="number" placeholder="3.32" name="water_price" min="0"
+                     value="{{ schedule.surface }}" step="0.01" required>
+            </div>
+          </div>
+        </div>
 
         <br class="uk-visible@m">
         <button class="uk-button uk-button-secondary uk-width-1-1" type="submit">Éditer</button>
       </form>
     </div>
   </div>
+{% endblock %}
+
+{% block javascript %}
+{{ parent() }}
+<script defer>
+  $(document).ready(function () {
+    var request;
+    // SETTINGS FORM
+    $("#settings").submit(function (event) {
+      UIkit.notification.closeAll();
+      $("input").removeClass('uk-form-danger');
+      event.preventDefault();
+      if (request) {
+        request.abort();
+      }
+
+      var $form = $(this);
+      var $inputs = $form.find("input, select, button, textarea");
+      var serializedData = $form.serialize();
+      var buttonText = $form.find('button').html();
+      $form.find('button').html('<div uk-spinner></div>');
+      $inputs.prop("disabled", true);
+
+      request = $.ajax({
+        url: "https://api.arrosmart.tk/user/settings?token={{ this.session.userdata('token') }}",
+        type: "put",
+        data: serializedData
+      });
+
+
+      request.done(function (response, textStatus, jqXHR) {
+        UIkit.notification("<span uk-icon='icon: check'></span> Vos paramètres ont été modifiés avec succès !", {status: 'success'});
+      });
+      request.fail(function (jqXHR, textStatus, errorThrown) {
+        var errors = ' ';
+        for (property in jqXHR.responseJSON) {
+          for (i in property) {
+            if (jqXHR.responseJSON[property][i] != undefined) {
+              errors += '- ' + jqXHR.responseJSON[property][i] + '<br>';
+            }
+          }
+          $("#account").find("input[name=" + property + "]").addClass('uk-form-danger');
+        }
+        if (errorThrown === 'Unprocessable Entity') {
+          UIkit.notification("<span uk-icon='icon: close'></span>" + errors, {status: 'danger', timeout: 8000});
+          $("#auth").removeClass('uk-animation-fade').addClass('uk-animation-shake');
+          window.setTimeout(function () {
+            $("#auth").removeClass('uk-animation-shake');
+          }, 500);
+        } else {
+          UIkit.notification("<span uk-icon='icon: ban'></span> Une erreur est survenue, veuillez rafraichir la page ou réessayer plus tard.", {status: 'danger'});
+        }
+      });
+      request.always(function () {
+        $form.find('button').html(buttonText);
+        $inputs.prop("disabled", false);
+      });
+    });
+  });
+</script>
 {% endblock %}
