@@ -29,7 +29,7 @@
           <div class="uk-card uk-background-orange uk-card-body">
             <i class="fa fa-thermometer-half"></i>&nbsp;&nbsp;&nbsp;{{ weather_data.temperature.last }}&#8239;°C
             <div class="uk-position-bottom info">
-              <span class="uk-text-small">Actuellement</span>
+              <span class="uk-text-small">Il y a {{ last_check_since }}</span>
             </div>
           </div>
         </div>
@@ -37,7 +37,7 @@
           <div class="uk-card uk-background-green uk-card-body">
             <i class="fa fa-tachometer"></i><i class="fa fa-tint" style="font-size: .7em;margin-left: 1px;vertical-align: bottom;"></i>&nbsp;&nbsp;&nbsp;{{ weather_data.humidity.last }}&#8239;%
             <div class="uk-position-bottom info">
-              <span class="uk-text-small">Actuellement</span>
+              <span class="uk-text-small">Il y a {{ last_check_since }}</span>
             </div>
           </div>
         </div>
